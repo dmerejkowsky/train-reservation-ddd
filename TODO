@@ -1,0 +1,7 @@
+# TODO
+
+* Python3 everywhere
+* Flask everywhere
+* pytest for the guiding test
+* httpx for the http clients
+* requirements.txt
