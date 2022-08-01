@@ -1,0 +1,2 @@
+* Used iterative development, but without refactoring and without TDD
+* Writing the second test is a nightmare!
