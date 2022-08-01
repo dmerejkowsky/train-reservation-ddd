@@ -62,3 +62,5 @@ def test_retrieved_set_manifest(client: FakeClient, train_id: TrainId) -> None:
     response = client.get_manifest(train_id)
 
     assert response == manifest
+
+

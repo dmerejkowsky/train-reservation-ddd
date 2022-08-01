@@ -4,11 +4,11 @@ import json
 
 class TicketOffice(object):
     def __init__(self) -> None:
-        self.client = Client()
+        self.httpx_client = Client()
 
     def reserve(self, train_id: str, seat_count: str) -> str:
         number_of_seats = int(seat_count)
-        train_data = self.client.get(
+        train_data = self.httpx_client.get(
             "http://localhost:8081/data_for_train/" + train_id
         ).json()
         available_seats = (
@@ -17,7 +17,7 @@ class TicketOffice(object):
         to_reserve = []
         for i in range(number_of_seats):
             to_reserve.append(next(available_seats))
-        booking_reference = self.client.get(
+        booking_reference = self.httpx_client.get(
             "http://localhost:8082/booking_reference"
         ).text
 
@@ -34,7 +34,7 @@ class TicketOffice(object):
             "booking_reference": reservation["booking_reference"],
         }
 
-        response = self.client.post(
+        response = self.httpx_client.post(
             "http://localhost:8081/reserve", data=reservation_payload
         ).json()
         assert response.get("seats")

@@ -9,6 +9,9 @@ class SeatNumber:
     def __str__(self) -> str:
         return str(self.value)
 
+    def __repr__(self) -> str:
+        return f"SeatNumber({self})"
+
 
 class CoachId:
     def __init__(self, value: str):
@@ -16,6 +19,9 @@ class CoachId:
 
     def __str__(self) -> str:
         return str(self.value)
+
+    def __repr__(self) -> str:
+        return f"CoachId({self})"
 
 
 @dataclass(frozen=True)
@@ -33,6 +39,9 @@ class SeatId:
     def __str__(self) -> str:
         return f"{self.number}{self.coach_id}"
 
+    def __repr__(self) -> str:
+        return f"SeatId({self})"
+
 
 class BookingReference:
     def __init__(self, value: str):
@@ -40,6 +49,9 @@ class BookingReference:
 
     def __str__(self) -> str:
         return str(self.value)
+
+    def __repr__(self) -> str:
+        return f"BookingReference({self})"
 
 
 @dataclass
@@ -63,6 +75,10 @@ class Seat:
 
     def book(self, booking_reference: BookingReference) -> None:
         self.booking_reference = booking_reference
+
+    @property
+    def is_free(self) -> bool:
+        return self.booking_reference is None
 
 
 class Manifest:
@@ -92,10 +108,16 @@ class Manifest:
     def seats(self) -> list[Seat]:
         return list(self._seats.values())
 
+    def __repr__(self) -> str:
+        return f"{self.seats()}"
+
 
 class TrainId:
     def __init__(self, value: str):
         self.value = value
+
+    def __str__(self) -> str:
+        return self.value
 
 
 class Client(metaclass=abc.ABCMeta):
