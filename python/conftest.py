@@ -1,4 +1,5 @@
-from client import Client, TrainId, Manifest
+from client import Client, TrainId, Manifest, Reservation
+from http_client import HttpClient
 import pytest
 
 
@@ -17,7 +18,18 @@ class FakeClient(Client):
     def get_manifest(self, train_id: TrainId) -> Manifest:
         return self.manifest
 
+    def make_reservation(self, reservation: Reservation) -> None:
+        pass
+
 
 @pytest.fixture
-def client() -> FakeClient:
-    return FakeClient()
+def fake_client(train_id: TrainId) -> FakeClient:
+    client = FakeClient()
+    return client
+
+
+@pytest.fixture
+def http_client(train_id: TrainId) -> HttpClient:
+    client = HttpClient()
+    client.reset(train_id)
+    return client

@@ -23,6 +23,7 @@ class TicketOffice(object):
         to_reserve = []
         for i in range(number_of_seats):
             to_reserve.append(next(available_seats))
+
         booking_reference = self.httpx_client.get(
             "http://localhost:8082/booking_reference"
         ).text

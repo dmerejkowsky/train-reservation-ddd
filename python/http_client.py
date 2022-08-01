@@ -7,6 +7,7 @@ from client import (
     Client,
     CoachId,
     Manifest,
+    Reservation,
     Seat,
     SeatId,
     SeatNumber,
@@ -30,6 +31,9 @@ class HttpClient(Client):
         response.raise_for_status()
 
         return manifest_from_train_data(response.json())
+
+    def make_reservation(self, reservation: Reservation) -> None:
+        pass
 
 
 def manifest_from_train_data(train_data: Any) -> Manifest:

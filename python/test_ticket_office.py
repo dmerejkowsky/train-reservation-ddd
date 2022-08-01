@@ -44,23 +44,21 @@ def test_retrieve_booking_reference_from_manifest() -> None:
     assert manifest.booking_reference(seat_id) == booking_reference
 
 
-def test_get_empty_manifest(client: FakeClient, train_id: TrainId) -> None:
-    manifest = client.get_manifest(train_id)
+def test_get_empty_manifest(fake_client: FakeClient, train_id: TrainId) -> None:
+    manifest = fake_client.get_manifest(train_id)
 
     assert manifest.seats() == []
 
 
-def test_retrieved_set_manifest(client: FakeClient, train_id: TrainId) -> None:
+def test_retrieved_set_manifest(fake_client: FakeClient, train_id: TrainId) -> None:
     seats = [
         Seat.parse("1A"),
         Seat.parse("2A"),
     ]
 
     manifest = Manifest.with_free_seats(seats)
-    client.set_manifest(manifest)
+    fake_client.set_manifest(manifest)
 
-    response = client.get_manifest(train_id)
+    response = fake_client.get_manifest(train_id)
 
     assert response == manifest
-
-

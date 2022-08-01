@@ -2,3 +2,5 @@
 * Writing the second test is (kind of) a nightmare!
 * But keeping writing tests this way clearly won't work...
 * So let's think about domain now
+* Use TDD to implement FakeClient and HTTPClient
+* Start rewriting TicketOffice to use a client

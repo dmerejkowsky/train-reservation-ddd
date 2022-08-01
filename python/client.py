@@ -120,7 +120,18 @@ class TrainId:
         return self.value
 
 
+@dataclass(frozen=True)
+class Reservation:
+    train_id: TrainId
+    seats: list[SeatId]
+    booking_reference: BookingReference
+
+
 class Client(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get_manifest(self, train_id: TrainId) -> Manifest:
+        pass
+
+    @abc.abstractmethod
+    def make_reservation(self, reservation: Reservation) -> None:
         pass
