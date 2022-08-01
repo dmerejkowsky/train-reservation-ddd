@@ -5,3 +5,7 @@
 * pytest for the guiding test
 * httpx for the http clients
 * requirements.txt
+
+* ./booking_reference_service/ -> booking/
+* ./train_data_service/ -> train_data/
+* *.py -> ticket_office
