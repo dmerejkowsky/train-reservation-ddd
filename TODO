@@ -9,3 +9,7 @@
 * ./booking_reference_service/ -> booking/
 * ./train_data_service/ -> train_data/
 * *.py -> ticket_office
+
+* booking: better API - maybe 'POST reference/new' , 'GET reference/last' ?
+
+* Dockerize the two services so you don't need Python for the kata
