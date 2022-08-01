@@ -10,7 +10,7 @@ from client import (
     SeatNumber,
     TrainId,
 )
-from conftest import FakeClient
+from .conftest import FakeClient
 
 
 def test_seat() -> None:
