@@ -20,13 +20,13 @@ import itertools
 class BookingReferenceService(object):
     def __init__(self, starting_point):
         self.counter = itertools.count(starting_point)
-    
+
     def booking_reference(self):
         next_number = next(self.counter)
         return str(hex(next_number))[2:]
-        
+
     booking_reference.exposed = True
-    
+
 def main(args):
     if args:
         starting_point = int(args[0], 16) + 1
