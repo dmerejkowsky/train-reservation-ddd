@@ -17,15 +17,21 @@ This will return a string that looks a bit like this:
 import cherrypy
 import itertools
 
+
 class BookingReferenceService(object):
     def __init__(self, starting_point):
-        self.counter = itertools.count(starting_point)
+        self.counter = starting_point
+
+    def last_booking_reference(self):
+        return str(hex(self.counter))[2:]
 
     def booking_reference(self):
-        next_number = next(self.counter)
-        return str(hex(next_number))[2:]
+        self.counter += 1
+        return str(hex(self.counter))[2:]
 
     booking_reference.exposed = True
+    last_booking_reference.exposed = True
+
 
 def main(args):
     if args:
@@ -33,11 +39,13 @@ def main(args):
     else:
         starting_point = 123456789
 
-    cherrypy.config.update({"server.socket_port" : 8082})
+    cherrypy.config.update({"server.socket_port": 8082})
     cherrypy.quickstart(BookingReferenceService(starting_point))
+
 
 if __name__ == "__main__":
     import sys
+
     help_text = """
 Use this program to start a booking reference service:
 
@@ -51,7 +59,9 @@ If you have to restart the service, you can continue counting from the
 previous reference by passing it on the command line:
 
     python {0} 75bcd15
-    """.format(sys.argv[0])
+    """.format(
+        sys.argv[0]
+    )
     if "-help" in sys.argv or "--help" in sys.argv or "-h" in sys.argv:
         print(help_text)
     else:

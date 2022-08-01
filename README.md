@@ -8,11 +8,11 @@ All the starting code for this kata is available in [my github repo](https://git
 
 ## Business Rules around Reservations
 
-There are various business rules and policies around which seats may be reserved. For a train overall, no more than 70% of seats may be reserved in advance, and ideally no individual coach should have no more than 70% reserved seats either. However, there is another business rule that says you _must_ put all the seats for one reservation in the same coach. This could make you and go over 70% for some coaches, just make sure to keep to 70% for the whole train.
+There are various business rules and policies around which seats may be reserved. For a train overall, no more than 70% of seats may be reserved in advance, and ideally no individual coach should have no more than 70% reserved seats either. However, there is another business rule that says you _must_ put all the seats for one reservation in the same coach. This could make you go over 70% for some coaches, just make sure to keep to 70% for the whole train.
 
 ## The Guiding Test
 
-The Ticket Office service needs to respond to a HTTP POST request that comes with form data telling you which train the customer wants to reserve seats on, and how many they want. It should return a json document detailing the reservation that has been made. 
+The Ticket Office service needs to respond to a HTTP POST request that comes with form data telling you which train the customer wants to reserve seats on, and how many they want. It should return a json document detailing the reservation that has been made.
 
 A reservation comprises a json document with three fields, the train id, booking reference, and the ids of the seats that have been reserved. Example json:
 
@@ -39,10 +39,10 @@ You can use this service to get a unique booking reference. Make a GET request t
 This will return a string that looks a bit like this:
 
 	75bcd15
-	
-### Train Data Service 
 
-You can get information about which each train has by using the train data service. For test purposes, you can start a local service using the provided code in the "train_data_service" folder. You can assume the real service will behave the same way, but be available on a different url.
+### Train Data Service
+
+eou can get information about which each train has by using the train data service. For test purposes, you can start a local service using the provided code in the "train_data_service" folder. You can assume the real service will behave the same way, but be available on a different url.
 
 Again, you need [Python 3.3](http://python.org) and [CherryPy](http://www.cherrypy.org/), then start the server by running:
 
@@ -60,7 +60,7 @@ Note I've left out all the extraneous details about where the train is going to 
 
     http://localhost:8081/reserve
 
-and attach form data for which seats to reserve. There should be three fields: 
+and attach form data for which seats to reserve. There should be three fields:
 
     "train_id", "seats", "booking_reference"
 
