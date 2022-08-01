@@ -6,8 +6,6 @@
 * httpx for the http clients
 * requirements.txt
 
-* ./booking_reference_service/ -> booking/
-* ./train_data_service/ -> train_data/
 
 * booking: better API - maybe 'POST reference/new' , 'GET reference/last' ?
 
