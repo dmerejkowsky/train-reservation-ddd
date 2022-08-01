@@ -1,2 +1,4 @@
 * Used iterative development, but without refactoring and without TDD
-* Writing the second test is a nightmare!
+* Writing the second test is (kind of) a nightmare!
+* But keeping writing tests this way clearly won't work...
+* So let's think about domain now
