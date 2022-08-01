@@ -9,16 +9,11 @@ class TicketOffice(object):
         self.client = client
         self.httpx_client = httpx.Client()
 
-    def reserve(self, *args: str) -> str:
-        # CherryPy stuff
-        assert len(args) == 2
-        train_id_str = args[0]
-        seat_count_str = args[1]
+    def reserve(self, train_id: str, seat_count: str) -> str:
+        train_id_ = TrainId(train_id)
+        number_of_seats = int(seat_count)
 
-        number_of_seats = int(seat_count_str)
-        train_id = TrainId(train_id_str)
-
-        manifest = self.client.get_manifest(train_id)
+        manifest = self.client.get_manifest(train_id_)
         available_seats = (s for s in manifest.seats() if s.is_free)
         to_reserve = []
         for i in range(number_of_seats):
@@ -28,7 +23,7 @@ class TicketOffice(object):
             "http://localhost:8082/booking_reference"
         ).text
 
-        seat_ids = [s.id for s in to_reserve]
+        seat_ids = [str(s.id) for s in to_reserve]
         reservation = {
             "train_id": train_id,
             "booking_reference": booking_reference,

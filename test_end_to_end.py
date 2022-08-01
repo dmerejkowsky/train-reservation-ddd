@@ -2,7 +2,7 @@ import json
 import httpx
 
 
-def test_reserve_seats_from_empty_train():
+def test_reserve_seats_from_empty_train() -> None:
     """
     Given no reservation at all
     When we reserve 4 seats
@@ -28,7 +28,7 @@ def test_reserve_seats_from_empty_train():
     assert reservation["booking_reference"] == last_booking_reference
 
 
-def test_reserve_four_additional_seats():
+def test_reserve_four_additional_seats() -> None:
     """
     Given 4 seats already booked
     When we reserve 4 seats
