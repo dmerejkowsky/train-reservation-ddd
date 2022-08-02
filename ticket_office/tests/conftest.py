@@ -1,4 +1,4 @@
-from client import Client, TrainId, Manifest, Reservation
+from client import Client, TrainId, Manifest, Reservation, BookingReference
 from http_client import HttpClient
 import pytest
 
@@ -11,6 +11,7 @@ def train_id() -> TrainId:
 class FakeClient(Client):
     def __init__(self) -> None:
         self.manifest = Manifest.empty()
+        self._counter = 0
 
     def set_manifest(self, manifest: Manifest) -> None:
         self.manifest = manifest
@@ -20,6 +21,10 @@ class FakeClient(Client):
 
     def make_reservation(self, reservation: Reservation) -> None:
         pass
+
+    def get_booking_reference(self) -> BookingReference:
+        self._counter += 1
+        return BookingReference(f"fake-{self._counter}")
 
 
 @pytest.fixture

@@ -18,7 +18,12 @@ def test_can_book_some_seats(train_id: TrainId, http_client: HttpClient) -> None
     ]
     booking_reference = BookingReference("123456")
     reservation = Reservation(
-        train_id=train_id, seats=seat_ids, booking_reference=booking_reference
+        train=train_id, seats=seat_ids, booking_reference=booking_reference
     )
 
     http_client.make_reservation(reservation)
+
+
+def test_can_get_booking_reference(http_client: HttpClient) -> None:
+    booking_reference = http_client.get_booking_reference()
+    assert booking_reference

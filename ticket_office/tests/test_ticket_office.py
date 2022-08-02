@@ -32,7 +32,6 @@ def test_manifest_has_no_booking_reference_by_default() -> None:
 
 
 def test_retrieve_booking_reference_from_manifest() -> None:
-
     seat_id = SeatId.parse("1A")
     seats = [Seat.from_id(seat_id)]
     manifest = Manifest.with_free_seats(seats)

@@ -1,13 +1,12 @@
 import httpx
 import json
 
-from client import Client, TrainId
+from client import Client, TrainId, Reservation
 
 
 class TicketOffice(object):
     def __init__(self, *, client: Client) -> None:
         self.client = client
-        self.httpx_client = httpx.Client()
 
     def reserve(self, train_id: str, seat_count: str) -> str:
         train_id_ = TrainId(train_id)
@@ -19,29 +18,30 @@ class TicketOffice(object):
         for i in range(number_of_seats):
             to_reserve.append(next(available_seats))
 
-        booking_reference = self.httpx_client.get(
-            "http://localhost:8082/booking_reference"
-        ).text
+        booking_reference = self.client.get_booking_reference()
 
-        seat_ids = [str(s.id) for s in to_reserve]
-        reservation = {
-            "train_id": train_id,
-            "booking_reference": booking_reference,
-            "seats": seat_ids,
-        }
+        seat_ids = [s.id for s in to_reserve]
+        reservation = Reservation(
+            train=train_id_, seats=seat_ids, booking_reference=booking_reference
+        )
 
-        reservation_payload = {
-            "train_id": reservation["train_id"],
-            "seats": json.dumps(reservation["seats"]),
-            "booking_reference": reservation["booking_reference"],
-        }
+        self.client.make_reservation(reservation)
 
-        response = self.httpx_client.post(
-            "http://localhost:8081/reserve", data=reservation_payload
-        ).json()
-        assert response.get("seats")
+        return serialize_reservation(reservation)
 
-        return json.dumps(reservation)
+
+def serialize_reservation(reservation: Reservation) -> str:
+    train_id = reservation.train
+    seat_ids = reservation.seats
+    booking_reference = reservation.booking_reference
+
+    payload = {
+        "train_id": str(train_id),
+        "seats": [str(s) for s in seat_ids],
+        "booking_reference": str(booking_reference),
+    }
+
+    return json.dumps(payload)
 
 
 if __name__ == "__main__":

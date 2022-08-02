@@ -35,6 +35,11 @@ class HttpClient(Client):
     def make_reservation(self, reservation: Reservation) -> None:
         pass
 
+    def get_booking_reference(self) -> BookingReference:
+        response = self._client.get("http://localhost:8082/booking_reference")
+        response.raise_for_status()
+        return BookingReference(response.text)
+
 
 def manifest_from_train_data(train_data: Any) -> Manifest:
     assert "seats" in train_data
