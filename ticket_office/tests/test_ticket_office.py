@@ -10,6 +10,7 @@ from client import (
     SeatNumber,
     TrainId,
 )
+
 from .conftest import FakeClient
 
 

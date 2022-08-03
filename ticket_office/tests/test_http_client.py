@@ -1,4 +1,4 @@
-from client import BookingReference, Seat, SeatId, TrainId, Reservation
+from client import BookingReference, Reservation, Seat, SeatId, TrainId
 from http_client import HttpClient
 
 

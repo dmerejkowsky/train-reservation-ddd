@@ -1,6 +1,7 @@
-from client import Client, TrainId, Manifest, Reservation, BookingReference
-from http_client import HttpClient
 import pytest
+
+from client import BookingReference, Client, Manifest, Reservation, TrainId
+from http_client import HttpClient
 
 
 @pytest.fixture

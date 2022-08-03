@@ -1,8 +1,9 @@
-import httpx
 import json
-
-from client import Client, TrainId, Reservation
 from typing import Any
+
+import httpx
+
+from client import Client, Reservation, TrainId
 
 
 class TicketOffice(object):
@@ -44,6 +45,7 @@ def serialize_reservation(reservation: Reservation) -> str:
 if __name__ == "__main__":
     """Deploy this class as a web service using CherryPy"""
     import cherrypy
+
     from http_client import HttpClient
 
     TicketOffice.reserve.exposed = True  # type: ignore[attr-defined]

@@ -1,54 +1,11 @@
 import abc
 from dataclasses import dataclass
-from typing import Any, TypeVar, Generic
-from typing_extensions import Protocol
 from functools import total_ordering
+from typing import Any, Generic, TypeVar
 
-C = TypeVar("C")
+from typing_extensions import Protocol
 
-
-class Comparable(Protocol):
-    def __eq__(self, other: Any) -> bool:
-        pass
-
-    def __lt__(self: C, other: C) -> bool:
-        pass
-
-    def __gt__(self: C, other: C) -> bool:
-        pass
-
-    def __le__(self: C, other: C) -> bool:
-        pass
-
-    def __ge__(self: C, other: C) -> bool:
-        pass
-
-
-T = TypeVar("T", bound=Comparable)
-
-
-@total_ordering
-class ValueObject(Generic[T]):
-    def __init__(self, value: T):
-        self._value = value
-
-    def __eq__(self, o: Any) -> bool:
-        if not isinstance(o, self.__class__):
-            return False
-        return self._value == o._value
-
-    def __lt__(self, o: "ValueObject[T]") -> bool:
-        return self._value < o._value
-
-    def __str__(self) -> str:
-        return str(self._value)
-
-    def __repr__(self) -> str:
-        class_name = self.__class__.__name__
-        return f"{class_name}({self})"
-
-    def __hash__(self) -> int:
-        return hash(self._value)
+from infra import ValueObject
 
 
 class SeatNumber(ValueObject):
