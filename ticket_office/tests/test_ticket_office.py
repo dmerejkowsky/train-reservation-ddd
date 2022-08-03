@@ -19,6 +19,16 @@ def test_seat() -> None:
     assert seat.id == seat_id
 
 
+def test_seat_ids_are_value_objects() -> None:
+    x = SeatId.parse("1A")
+    y = SeatId.parse("1A")
+    z = SeatId.parse("2A")
+
+    assert x == y
+    assert x != z
+    assert x <= y < z
+
+
 def test_manifest_has_no_booking_reference_by_default() -> None:
     seats = [
         Seat.parse("1A"),

@@ -1,3 +1,4 @@
+import json
 from typing import Any
 
 import httpx
@@ -33,7 +34,21 @@ class HttpClient(Client):
         return manifest_from_train_data(response.json())
 
     def make_reservation(self, reservation: Reservation) -> None:
-        pass
+        train_id = reservation.train
+        seat_ids = reservation.seats
+        booking_reference = reservation.booking_reference
+
+        # Note: this is *not* reservation.as_dict(), in particular,
+        # payload["seats"] is a *string*
+        payload: dict[str, str] = {
+            "train_id": str(train_id),
+            "seats": json.dumps([str(i) for i in seat_ids]),
+            "booking_reference": str(booking_reference),
+        }
+
+        response = self._client.post("http://localhost:8081/reserve", data=payload)
+        response.raise_for_status()
+        assert "seats" in response.json()
 
     def get_booking_reference(self) -> BookingReference:
         response = self._client.get("http://localhost:8082/booking_reference")
@@ -51,7 +66,7 @@ def manifest_from_train_data(train_data: Any) -> Manifest:
         seat_id = SeatId(number=number, coach_id=coach_id)
         booking_str = seat_dict["booking_reference"]
         if booking_str:
-            booking_reference = BookingReference(seat_dict["booking_reference"])
+            booking_reference = BookingReference(booking_str)
         else:
             booking_reference = None
         seat = Seat(

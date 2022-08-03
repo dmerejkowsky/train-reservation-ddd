@@ -17,14 +17,16 @@ def test_reserve_seats_from_empty_train() -> None:
     response = client.post("http://127.0.0.1:8081/reset", data={"train_id": train_id})
     response.raise_for_status()
 
-    reservation = client.post(
+    response = client.post(
         "http://127.0.0.1:8083/reserve", data={"train_id": train_id, "seat_count": 4}
-    ).json()
+    )
 
     last_booking_reference = client.get(
         "http://127.0.0.1:8082/last_booking_reference"
     ).text
 
+    response.raise_for_status()
+    reservation = response.json()
     assert reservation["train_id"] == "express_2000"
     assert len(reservation["seats"]) == 4
     assert reservation["seats"] == ["1A", "2A", "3A", "4A"]

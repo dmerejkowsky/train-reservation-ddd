@@ -2,6 +2,7 @@ import httpx
 import json
 
 from client import Client, TrainId, Reservation
+from typing import Any
 
 
 class TicketOffice(object):
@@ -31,17 +32,13 @@ class TicketOffice(object):
 
 
 def serialize_reservation(reservation: Reservation) -> str:
-    train_id = reservation.train
-    seat_ids = reservation.seats
-    booking_reference = reservation.booking_reference
-
-    payload = {
-        "train_id": str(train_id),
-        "seats": [str(s) for s in seat_ids],
-        "booking_reference": str(booking_reference),
+    seat_ids = [str(s) for s in reservation.seats]
+    as_dict = {
+        "train_id": str(reservation.train),
+        "seats": seat_ids,
+        "booking_reference": str(reservation.booking_reference),
     }
-
-    return json.dumps(payload)
+    return json.dumps(as_dict)
 
 
 if __name__ == "__main__":

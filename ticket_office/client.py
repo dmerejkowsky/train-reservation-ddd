@@ -1,29 +1,65 @@
-from dataclasses import dataclass
 import abc
+from dataclasses import dataclass
+from typing import Any, TypeVar, Generic
+from typing_extensions import Protocol
+from functools import total_ordering
+
+C = TypeVar("C")
 
 
-class SeatNumber:
-    def __init__(self, value: int):
-        self.value = value
+class Comparable(Protocol):
+    def __eq__(self, other: Any) -> bool:
+        pass
+
+    def __lt__(self: C, other: C) -> bool:
+        pass
+
+    def __gt__(self: C, other: C) -> bool:
+        pass
+
+    def __le__(self: C, other: C) -> bool:
+        pass
+
+    def __ge__(self: C, other: C) -> bool:
+        pass
+
+
+T = TypeVar("T", bound=Comparable)
+
+
+@total_ordering
+class ValueObject(Generic[T]):
+    def __init__(self, value: T):
+        self._value = value
+
+    def __eq__(self, o: Any) -> bool:
+        if not isinstance(o, self.__class__):
+            return False
+        return self._value == o._value
+
+    def __lt__(self, o: "ValueObject[T]") -> bool:
+        return self._value < o._value
 
     def __str__(self) -> str:
-        return str(self.value)
+        return str(self._value)
 
     def __repr__(self) -> str:
-        return f"SeatNumber({self})"
+        class_name = self.__class__.__name__
+        return f"{class_name}({self})"
+
+    def __hash__(self) -> int:
+        return hash(self._value)
 
 
-class CoachId:
-    def __init__(self, value: str):
-        self.value = value
-
-    def __str__(self) -> str:
-        return str(self.value)
-
-    def __repr__(self) -> str:
-        return f"CoachId({self})"
+class SeatNumber(ValueObject):
+    pass
 
 
+class CoachId(ValueObject):
+    pass
+
+
+@total_ordering
 @dataclass(frozen=True)
 class SeatId:
     number: SeatNumber
@@ -35,6 +71,9 @@ class SeatId:
         number = SeatNumber(int(value[0]))
         coach_id = CoachId(value[1])
         return cls(number, coach_id)
+
+    def __lt__(self, other: "SeatId") -> bool:
+        return str(self) < str(other)
 
     def __str__(self) -> str:
         return f"{self.number}{self.coach_id}"
@@ -100,6 +139,10 @@ class Manifest:
         if not seat:
             return None
         return seat.booking_reference
+
+    def is_free(self, seat_id: SeatId) -> bool:
+        assert seat_id in self._seats
+        return self._seats[seat_id].is_free
 
     def book(self, seat_id: SeatId, booking_reference: BookingReference) -> None:
         assert seat_id in self._seats

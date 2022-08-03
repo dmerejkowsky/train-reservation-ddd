@@ -23,6 +23,11 @@ def test_can_book_some_seats(train_id: TrainId, http_client: HttpClient) -> None
 
     http_client.make_reservation(reservation)
 
+    manifest = http_client.get_manifest(train_id)
+
+    for seat_id in seat_ids:
+        assert not manifest.is_free(seat_id)
+
 
 def test_can_get_booking_reference(http_client: HttpClient) -> None:
     booking_reference = http_client.get_booking_reference()
