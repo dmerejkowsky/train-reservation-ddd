@@ -24,7 +24,7 @@ def test_reserve_seats_from_empty_train() -> None:
 
     check_reservation(
         reservation,
-        train_id=context.train_id,
+        train=context.train,
         booking_reference=BookingReference("1234"),
         seat_count=4,
     )
@@ -33,7 +33,7 @@ def test_reserve_seats_from_empty_train() -> None:
 def test_reserve_four_additional_seats() -> None:
     context = Context()
     old_booking_reference = BookingReference("old")
-    context.book_seats(["1A", "2A", "3A", "4A"], old_booking_reference)
+    context.book_seats(["1A", "2A"], old_booking_reference)
 
     new_booking_reference = BookingReference("new")
     context.fake_client.set_booking_reference(new_booking_reference)
@@ -41,7 +41,7 @@ def test_reserve_four_additional_seats() -> None:
 
     check_reservation(
         reservation,
-        train_id=context.train_id,
+        train=context.train,
         booking_reference=new_booking_reference,
         seat_count=4,
     )

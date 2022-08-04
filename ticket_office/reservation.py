@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from itertools import groupby
 from functools import total_ordering
 
 from value_object import ValueObject
@@ -126,5 +125,5 @@ class Reservation:
     seats: list[SeatId]
     booking_reference: BookingReference
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Reservation(reference={self.booking_reference}, train={self.train}, seats={[str(i) for i in self.seats]})"
