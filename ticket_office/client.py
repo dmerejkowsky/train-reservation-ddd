@@ -5,7 +5,7 @@ from typing import Any, Generic, TypeVar
 
 from typing_extensions import Protocol
 
-from infra import ValueObject
+from values import ValueObject
 
 
 class SeatNumber(ValueObject):

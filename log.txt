@@ -4,3 +4,5 @@
 * So let's think about domain now
 * Use TDD to implement FakeClient and HTTPClient
 * Start rewriting TicketOffice to use a client
+* Got bug because my ValueObject did not implement __eq__, __hash__ and __lt__. That
+  was unpleasant
