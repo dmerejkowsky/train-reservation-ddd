@@ -1,4 +1,5 @@
-from client import Client, Reservation, TrainId
+from client import Client
+from reservation import Reservation, TrainId
 
 
 class TicketOffice:
