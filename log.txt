@@ -7,3 +7,24 @@
 * Got bug because my ValueObject did not implement __eq__, __hash__ and __lt__. That
   was unpleasant
 * After 4 hours of work, I finally have a 'Train' class - better late than never I guess :P
+
+* After 5 hours - I finally got the red test I wanted:
+
+```
+AssertionError: Not enough room in coach A :
+ [
+   Seat(id=0A, booking_reference=old),
+   Seat(id=1A, booking_reference=old),
+   Seat(id=2A, booking_reference=old),
+   Seat(id=3A, booking_reference=old),
+   Seat(id=4A, booking_reference=old),
+   Seat(id=5A, booking_reference=old),
+   Seat(id=6A, booking_reference=old),
+   Seat(id=7A, booking_reference=new),
+   Seat(id=8A, booking_reference=new),
+   Seat(id=9A, booking_reference=new)
+]
+ Reservation was:
+   Reservation(reference=new, train=express_2000, seats=['7A', '8A', '9A', '0B'])
+assert 1.0 <= 0.7
+```
