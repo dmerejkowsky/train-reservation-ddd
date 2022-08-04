@@ -86,7 +86,7 @@ def check_reservation(
         occupancy = train.occupancy_for_coach(coach)
         assert occupancy <= 0.7, (
             f"Not enough room in coach {coach} : {train.seats_in_coach(coach)}.\n"
-            f"Reservation was\n: {reservation}"
+            f"Reservation was:\n{reservation}"
         )
 
     coaches = {s.coach_id for s in seat_ids}

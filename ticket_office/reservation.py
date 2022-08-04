@@ -125,3 +125,6 @@ class Reservation:
     train: TrainId
     seats: list[SeatId]
     booking_reference: BookingReference
+
+    def __str__(self):
+        return f"Reservation(reference={self.booking_reference}, train={self.train}, seats={[str(i) for i in self.seats]})"
