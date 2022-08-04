@@ -1,9 +1,9 @@
-import json
+# Note: those tests requires the 3 services (train_data, booking_reference and
+# ticket_office) to be up and running
+#
+# They are slow and unreliable - better to test with the domain objects
 
 import httpx
-
-# Note: requires the 3 services (train_data, booking_reference and
-# ticket_office) to be up and running
 
 
 def test_reserve_seats_from_empty_train() -> None:
@@ -44,13 +44,16 @@ def test_reserve_four_additional_seats() -> None:
     client = httpx.Client()
     response = client.post("http://127.0.0.1:8081/reset", data={"train_id": train_id})
     response.raise_for_status()
-    reservation = client.post(
+    response = client.post(
         "http://127.0.0.1:8083/reserve", data={"train_id": train_id, "seat_count": 4}
-    ).json()
+    )
+    response.raise_for_status()
 
-    reservation = client.post(
+    response = client.post(
         "http://127.0.0.1:8083/reserve", data={"train_id": train_id, "seat_count": 4}
-    ).json()
+    )
+    response.raise_for_status()
+    reservation = response.json()
 
     last_booking_reference = client.get(
         "http://127.0.0.1:8082/last_booking_reference"

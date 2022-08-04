@@ -1,9 +1,6 @@
 import json
-from typing import Any
 
-import httpx
-
-from client import Client, Reservation, TrainId
+from client import Reservation, TrainId
 from ticket_office import TicketOffice
 
 

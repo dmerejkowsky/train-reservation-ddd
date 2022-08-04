@@ -1,9 +1,6 @@
 import abc
 from dataclasses import dataclass
 from functools import total_ordering
-from typing import Any, Generic, TypeVar
-
-from typing_extensions import Protocol
 
 from values import ValueObject
 
@@ -39,15 +36,8 @@ class SeatId:
         return f"SeatId({self})"
 
 
-class BookingReference:
-    def __init__(self, value: str):
-        self.value = value
-
-    def __str__(self) -> str:
-        return str(self.value)
-
-    def __repr__(self) -> str:
-        return f"BookingReference({self})"
+class BookingReference(ValueObject):
+    pass
 
 
 @dataclass
@@ -56,18 +46,24 @@ class Seat:
     coach_id: CoachId
     booking_reference: BookingReference | None = None
 
+    def __str__(self) -> str:
+        return f"Seat(id={self.id}, booking_reference={self.booking_reference})"
+
+    def __repr__(self) -> str:
+        return str(self)
+
     @property
     def id(self) -> SeatId:
         return SeatId(number=self.number, coach_id=self.coach_id)
 
     @classmethod
-    def from_id(cls, id: SeatId) -> "Seat":
+    def free_seat_with_id(cls, id: SeatId) -> "Seat":
         return cls(id.number, id.coach_id)
 
     @classmethod
     def parse(cls, value: str) -> "Seat":
         id = SeatId.parse(value)
-        return cls.from_id(id)
+        return cls.free_seat_with_id(id)
 
     def book(self, booking_reference: BookingReference) -> None:
         self.booking_reference = booking_reference
@@ -77,19 +73,16 @@ class Seat:
         return self.booking_reference is None
 
 
-class Manifest:
-    def __init__(self, *, seats: list[Seat]) -> None:
+class TrainId(ValueObject):
+    pass
+
+
+class Train:
+    def __init__(self, *, id: TrainId, seats: list[Seat]) -> None:
+        self.id = id
         self._seats: dict[SeatId, Seat] = {}
         for seat in seats:
             self._seats[seat.id] = seat
-
-    @classmethod
-    def empty(cls) -> "Manifest":
-        return cls(seats=[])
-
-    @classmethod
-    def with_free_seats(cls, seats: list[Seat]) -> "Manifest":
-        return cls(seats=seats)
 
     def booking_reference(self, seat_id: SeatId) -> BookingReference | None:
         seat = self._seats.get(seat_id)
@@ -112,14 +105,6 @@ class Manifest:
         return f"{self.seats()}"
 
 
-class TrainId:
-    def __init__(self, value: str):
-        self.value = value
-
-    def __str__(self) -> str:
-        return self.value
-
-
 @dataclass(frozen=True)
 class Reservation:
     train: TrainId
@@ -129,7 +114,7 @@ class Reservation:
 
 class Client(metaclass=abc.ABCMeta):
     @abc.abstractmethod
-    def get_manifest(self, train_id: TrainId) -> Manifest:
+    def get_train(self, train_id: TrainId) -> Train:
         pass
 
     @abc.abstractmethod

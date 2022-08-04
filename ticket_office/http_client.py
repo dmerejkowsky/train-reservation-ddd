@@ -7,11 +7,10 @@ from client import (
     BookingReference,
     Client,
     CoachId,
-    Manifest,
     Reservation,
     Seat,
-    SeatId,
     SeatNumber,
+    Train,
     TrainId,
 )
 
@@ -25,13 +24,13 @@ class HttpClient(Client):
         response = self._client.post("http://localhost:8081/reset/" + str(train_id))
         response.raise_for_status()
 
-    def get_manifest(self, train_id: TrainId) -> Manifest:
+    def get_train(self, train_id: TrainId) -> Train:
         response = self._client.get(
             "http://localhost:8081/data_for_train/" + str(train_id)
         )
         response.raise_for_status()
 
-        return manifest_from_train_data(response.json())
+        return parse_train_data(train_id, response.json())
 
     def make_reservation(self, reservation: Reservation) -> None:
         train_id = reservation.train
@@ -47,8 +46,10 @@ class HttpClient(Client):
         }
 
         response = self._client.post("http://localhost:8081/reserve", data=payload)
-        response.raise_for_status()
-        assert "seats" in response.json()
+        # Note: sadly, the train_data responds with 200 OK and with invalid json
+        # in case of error
+        if "already booked" in response.text:
+            raise Exception("Already booked")
 
     def get_booking_reference(self) -> BookingReference:
         response = self._client.get("http://localhost:8082/booking_reference")
@@ -56,14 +57,13 @@ class HttpClient(Client):
         return BookingReference(response.text)
 
 
-def manifest_from_train_data(train_data: Any) -> Manifest:
+def parse_train_data(train_id: TrainId, train_data: Any) -> Train:
     assert "seats" in train_data
     seat_dicts = train_data["seats"].values()
     seats: list[Seat] = []
     for seat_dict in seat_dicts:
         coach_id = CoachId(seat_dict["coach"])
         number = SeatNumber(int(seat_dict["seat_number"]))
-        seat_id = SeatId(number=number, coach_id=coach_id)
         booking_str = seat_dict["booking_reference"]
         if booking_str:
             booking_reference = BookingReference(booking_str)
@@ -74,4 +74,4 @@ def manifest_from_train_data(train_data: Any) -> Manifest:
         )
         seats.append(seat)
 
-    return Manifest(seats=seats)
+    return Train(id=train_id, seats=seats)

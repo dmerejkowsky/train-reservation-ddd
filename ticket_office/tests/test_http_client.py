@@ -1,11 +1,11 @@
-from client import BookingReference, Reservation, Seat, SeatId, TrainId
+from client import BookingReference, Reservation, SeatId, TrainId
 from http_client import HttpClient
 
 
-def test_can_get_empty_manifest(train_id: TrainId, http_client: HttpClient) -> None:
-    manifest = http_client.get_manifest(train_id)
+def test_can_get_empty_train(train_id: TrainId, http_client: HttpClient) -> None:
+    train = http_client.get_train(train_id)
 
-    actual_seats = manifest.seats()
+    actual_seats = train.seats()
     assert len(actual_seats) == 16
     for seat in actual_seats:
         assert seat.is_free
@@ -23,10 +23,10 @@ def test_can_book_some_seats(train_id: TrainId, http_client: HttpClient) -> None
 
     http_client.make_reservation(reservation)
 
-    manifest = http_client.get_manifest(train_id)
+    train = http_client.get_train(train_id)
 
     for seat_id in seat_ids:
-        assert not manifest.is_free(seat_id)
+        assert not train.is_free(seat_id)
 
 
 def test_can_get_booking_reference(http_client: HttpClient) -> None:
