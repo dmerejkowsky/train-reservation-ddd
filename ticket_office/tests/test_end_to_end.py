@@ -10,7 +10,7 @@ def test_reserve_seats_from_empty_train() -> None:
     """
     Given no reservation at all
     When we reserve 4 seats
-    We get 1A to 4A
+    We get 01A to 04A
     """
     train_id = "express_2000"
 

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from itertools import groupby
 from functools import total_ordering
 
 from value_object import ValueObject
@@ -93,12 +94,27 @@ class Train:
         assert seat_id in self._seats
         return self._seats[seat_id].is_free
 
-    def book(self, seat_id: SeatId, booking_reference: BookingReference) -> None:
-        assert seat_id in self._seats
-        self._seats[seat_id].book(booking_reference)
+    def book(self, seats: list[SeatId], booking_reference: BookingReference) -> None:
+        for seat_id in seats:
+            assert seat_id in self._seats
+            self._seats[seat_id].book(booking_reference)
 
     def seats(self) -> list[Seat]:
         return list(self._seats.values())
+
+    def seats_in_coach(self, coach_id: CoachId) -> list[Seat]:
+        return [s for s in self._seats.values() if s.coach_id == coach_id]
+
+    def coaches(self) -> list[CoachId]:
+        res: set[CoachId] = set()
+        for seat in self._seats.values():
+            res.add(seat.coach_id)
+        return list(res)
+
+    def occupancy_for_coach(self, coach_id: CoachId) -> float:
+        seats_in_coach = self.seats_in_coach(coach_id)
+        occupied_seats = [s for s in seats_in_coach if not s.is_free]
+        return len(occupied_seats) / len(seats_in_coach)
 
     def __repr__(self) -> str:
         return f"{self.seats()}"

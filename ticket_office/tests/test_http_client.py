@@ -1,5 +1,5 @@
-from client import BookingReference, Reservation, SeatId, TrainId
 from http_client import HttpClient
+from reservation import BookingReference, Reservation, SeatId, TrainId
 
 
 def test_can_get_empty_train(train_id: TrainId, http_client: HttpClient) -> None:

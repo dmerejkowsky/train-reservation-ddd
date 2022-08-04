@@ -1,13 +1,13 @@
 import pytest
 
-from client import CoachId, Seat, SeatId, SeatNumber, Train, TrainId
 from http_client import HttpClient
+from reservation import CoachId, Seat, SeatId, SeatNumber, Train, TrainId
 
 from .helpers import FakeClient
 
 
 def empty_seats_for_coach(coach_id: CoachId) -> list[Seat]:
-    seat_numbers = [SeatNumber(i) for i in range(1, 10)]
+    seat_numbers = [SeatNumber(i) for i in range(0, 10)]
     seat_ids = [SeatId(s, coach_id) for s in seat_numbers]
     seats = [Seat.free_seat_with_id(id) for id in seat_ids]
     return seats

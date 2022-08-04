@@ -3,9 +3,9 @@ from typing import Any
 
 import httpx
 
-from client import (
+from client import Client
+from reservation import (
     BookingReference,
-    Client,
     CoachId,
     Reservation,
     Seat,

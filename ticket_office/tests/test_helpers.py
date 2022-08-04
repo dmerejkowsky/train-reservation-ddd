@@ -1,15 +1,23 @@
 import pytest
 
-from client import BookingReference, Reservation, SeatId, Train, TrainId
+from reservation import BookingReference, Reservation, SeatId, Train, TrainId
 
 from .helpers import FakeClient
+
+
+def test_fake_client_comes_with_an_empty_train(
+    fake_client: FakeClient, train_id: TrainId
+) -> None:
+    train = fake_client.get_train(train_id)
+    for seat in train.seats():
+        assert seat.is_free
 
 
 def test_throws_when_trying_to_book_same_seat_with_different_booking_references(
     train_id: TrainId, train: Train, fake_client: FakeClient
 ) -> None:
-    train.book(SeatId.parse("1A"), BookingReference("1234"))
-    train.book(SeatId.parse("2A"), BookingReference("1234"))
+    seat_ids = [SeatId.parse("1A"), SeatId.parse("2A")]
+    train.book(seat_ids, BookingReference("1234"))
 
     fake_client.set_train(train)
 
