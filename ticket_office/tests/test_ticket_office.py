@@ -18,6 +18,11 @@ class Context:
 
 
 def test_reserve_seats_from_empty_train() -> None:
+    """
+    Given an empty train where all seats are free
+    When we book 4 seats
+    Then the reservation is valid
+    """
     context = Context()
     context.fake_client.set_booking_reference(BookingReference("1234"))
     reservation = context.ticket_office.reserve(context.train_id, 4)
@@ -31,6 +36,11 @@ def test_reserve_seats_from_empty_train() -> None:
 
 
 def test_reserve_four_additional_seats() -> None:
+    """
+    Given a train with 8 seats remaining in coach A
+    When we book 4 seats
+    Then it makes a valid reservation
+    """
     context = Context()
     old_booking_reference = BookingReference("old")
     context.book_seats(["1A", "2A"], old_booking_reference)
@@ -48,6 +58,14 @@ def test_reserve_four_additional_seats() -> None:
 
 
 def test_chose_correct_coach_when_the_first_one_is_almost_full() -> None:
+    """
+    Given:
+        Coach B is free
+        Coach A is at 80%
+    When booking 4 seats
+    Then we book 4 seats in coach B
+
+    """
     context = Context()
     old_booking_reference = BookingReference("old")
     context.book_seats(
@@ -67,6 +85,36 @@ def test_chose_correct_coach_when_the_first_one_is_almost_full() -> None:
     )
 
 
+def test_chose_next_coach_when_the_first_one_is_at_60_percent() -> None:
+    """
+    Given:
+        Coach A is at 50%
+        Coach B is at 40%
+    When:
+        Booking 3 seats
+    Then:
+        We book 3 seats in coach B because booking one seat in coach A
+        would make the occupancy for A greater than 70%
+    """
+    context = Context()
+    old_booking_reference = BookingReference("old")
+    context.book_seats(
+        ["0A", "1A", "2A", "3A", "4A"],
+        old_booking_reference,
+    )
+
+    new_booking_reference = BookingReference("new")
+    context.fake_client.set_booking_reference(new_booking_reference)
+    reservation = context.ticket_office.reserve(context.train_id, 3)
+
+    check_reservation(
+        reservation,
+        train=context.train,
+        booking_reference=new_booking_reference,
+        seat_count=3,
+    )
+
+
 def check_reservation(
     reservation: Reservation,
     *,
@@ -82,12 +130,13 @@ def check_reservation(
     # Simulate a booking
     train.book(reservation.seats, booking_reference)
 
+    # Check all seats in the reservation are in the same coach
+    coaches = {s.coach_id for s in seat_ids}
+    assert len(coaches) == 1, f"All seats should have the same coach {seat_ids}"
+
     for coach in train.coaches():
         occupancy = train.occupancy_for_coach(coach)
         assert occupancy <= 0.7, (
             f"Not enough room in coach {coach} : {train.seats_in_coach(coach)}.\n"
             f"Reservation was:\n{reservation}"
         )
-
-    coaches = {s.coach_id for s in seat_ids}
-    assert len(coaches) == 1, f"All seats should have the same coach {seat_ids}"

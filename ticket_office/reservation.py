@@ -77,11 +77,22 @@ class TrainId(ValueObject):
 
 
 class Train:
+    """
+    For the purpose of resevration, a train is a fixed collection of seats.
+    Invariants:
+        * no two seats have the sam id
+        * self._caches contains the list of all the coaches
+    """
+
     def __init__(self, *, id: TrainId, seats: list[Seat]) -> None:
         self.id = id
         self._seats: dict[SeatId, Seat] = {}
+        self._coaches: set[CoachId] = set()
         for seat in seats:
+            coach_id = seat.coach_id
             self._seats[seat.id] = seat
+            if coach_id not in self._coaches:
+                self._coaches.add(coach_id)
 
     def booking_reference(self, seat_id: SeatId) -> BookingReference | None:
         seat = self._seats.get(seat_id)
@@ -105,15 +116,23 @@ class Train:
         return [s for s in self._seats.values() if s.coach_id == coach_id]
 
     def coaches(self) -> list[CoachId]:
-        res: set[CoachId] = set()
-        for seat in self._seats.values():
-            res.add(seat.coach_id)
-        return list(res)
+        return sorted(self._coaches)
+
+    def occupied_seats_in_coach(self, coach_id: CoachId) -> list[Seat]:
+        seats_in_coach = self.seats_in_coach(coach_id)
+        return [s for s in seats_in_coach if not s.is_free]
 
     def occupancy_for_coach(self, coach_id: CoachId) -> float:
         seats_in_coach = self.seats_in_coach(coach_id)
-        occupied_seats = [s for s in seats_in_coach if not s.is_free]
-        return len(occupied_seats) / len(seats_in_coach)
+        occupied_seats_in_coach = self.occupied_seats_in_coach(coach_id)
+        return (len(occupied_seats_in_coach)) / len(seats_in_coach)
+
+    def occupancy_for_coach_after_booking(
+        self, coach_id: CoachId, seat_count: int
+    ) -> float:
+        seats_in_coach = self.seats_in_coach(coach_id)
+        occupied_seats_in_coach = self.occupied_seats_in_coach(coach_id)
+        return (len(occupied_seats_in_coach) + seat_count) / len(seats_in_coach)
 
     def __repr__(self) -> str:
         return f"{self.seats()}"

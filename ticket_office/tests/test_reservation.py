@@ -38,7 +38,7 @@ def test_can_book_some_seats(train: Train) -> None:
 def test_compute_occupancy_by_coach(train: Train) -> None:
     coach_id = CoachId("A")
     booking_reference = BookingReference("1234")
-    ids = [SeatId(number=SeatNumber(i), coach_id=coach_id) for i in range(0, 6)]
+    ids = [SeatId(number=SeatNumber(i), coach_id=coach_id) for i in range(0, 5)]
     train.book(ids, booking_reference)
 
-    assert train.occupancy_for_coach(coach_id) == 0.6
+    assert train.occupancy_for_coach_after_booking(coach_id, seat_count=1) == 0.6

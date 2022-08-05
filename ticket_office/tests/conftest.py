@@ -14,7 +14,7 @@ def empty_seats_for_coach(coach_id: CoachId) -> list[Seat]:
 
 
 def make_empty_train(train_id: TrainId) -> Train:
-    coach_ids = [CoachId(c) for c in "ABCDEF"]
+    coach_ids = [CoachId(c) for c in "ABCDE"]
     seats = []
     for coach_id in coach_ids:
         seats.extend(empty_seats_for_coach(coach_id))

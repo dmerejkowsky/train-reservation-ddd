@@ -28,3 +28,7 @@ AssertionError: Not enough room in coach A :
    Reservation(reference=new, train=express_2000, seats=['7A', '8A', '9A', '0B'])
 assert 1.0 <= 0.7
 ```
+
+* Then it's a walk in the park
+
+* And I realize my guiding test was false :)

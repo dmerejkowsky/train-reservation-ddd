@@ -60,5 +60,5 @@ def test_reserve_four_additional_seats() -> None:
     ).text
     assert reservation["train_id"] == "express_2000"
     assert len(reservation["seats"]) == 4
-    assert reservation["seats"] == ["5A", "6A", "7A", "8A"]
+    assert reservation["seats"] == ["1B", "2B", "3B", "4B"]
     assert reservation["booking_reference"] == last_booking_reference
