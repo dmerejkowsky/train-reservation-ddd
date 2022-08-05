@@ -1,5 +1,5 @@
 from client import Client
-from reservation import Reservation, TrainId
+from reservation import CoachId, Reservation, Train, TrainId
 
 
 class TicketOffice:
@@ -10,16 +10,10 @@ class TicketOffice:
         train = self.client.get_train(train_id)
         to_reserve = []
 
-        for coach in train.coaches():
-            occupancy_for_coach_after_booking = train.occupancy_for_coach_after_booking(
-                coach, seat_count
-            )
-            if occupancy_for_coach_after_booking <= 0.7:
-                available_seats = [s for s in train.seats_in_coach(coach) if s.is_free]
-                to_reserve = available_seats[0:seat_count]
-                break
-
-        # TODO: to_reserve may be empty!
+        coach = self.find_best_coach(train, seat_count)
+        assert coach  # TODO
+        available_seats = [s for s in train.seats_in_coach(coach) if s.is_free]
+        to_reserve = available_seats[0:seat_count]
 
         booking_reference = self.client.get_booking_reference()
 
@@ -31,3 +25,9 @@ class TicketOffice:
         self.client.make_reservation(reservation)
 
         return reservation
+
+    def find_best_coach(self, train: Train, seat_count: int) -> CoachId | None:
+        for coach in train.coaches():
+            if train.occupancy_for_coach_after_booking(coach, seat_count) <= 0.7:
+                return coach
+        return None
