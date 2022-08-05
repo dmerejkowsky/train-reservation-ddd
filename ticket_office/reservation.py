@@ -134,6 +134,10 @@ class Train:
         occupied_seats_in_coach = self.occupied_seats_in_coach(coach_id)
         return (len(occupied_seats_in_coach) + seat_count) / len(seats_in_coach)
 
+    def occupancy_after_booking(self, seat_count: int) -> float:
+        occupied_seats = [s for s in self._seats.values() if not s.is_free]
+        return (len(occupied_seats) + seat_count) / len(self._seats)
+
     def __repr__(self) -> str:
         return f"{self.seats()}"
 

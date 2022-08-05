@@ -1,5 +1,5 @@
 from client import Client
-from reservation import CoachId, Reservation, Train, TrainId
+from reservation import Reservation, TrainId, CoachId, Train
 
 
 class TicketOffice:
@@ -11,7 +11,9 @@ class TicketOffice:
         to_reserve = []
 
         coach = self.find_best_coach(train, seat_count)
-        assert coach  # TODO
+        if not coach or train.occupancy_after_booking(seat_count) >= 0.7:
+            raise NotEnoughFreeSeats()
+
         available_seats = [s for s in train.seats_in_coach(coach) if s.is_free]
         to_reserve = available_seats[0:seat_count]
 
@@ -31,3 +33,7 @@ class TicketOffice:
             if train.occupancy_for_coach_after_booking(coach, seat_count) <= 0.7:
                 return coach
         return None
+
+
+class NotEnoughFreeSeats(Exception):
+    pass
