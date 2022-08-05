@@ -1,0 +1,64 @@
+patterns {
+  mypy.ini
+  pyproject.toml
+}
+
+project {
+  Dockerize
+  Http
+  Invariants
+  TODO
+  bool
+  cherrypy
+  config
+  dicts
+  eq
+  hashable
+  http
+  httpx
+  implementors
+  json
+  kata
+  lt
+  mypy
+  pytest
+  quickstart
+  sortable
+  txt
+  url
+}
+
+
+paths {
+
+  "tests/conftest.py" {
+    ABCDE
+  }
+
+  "value_object.py" {
+    ge
+    le
+  }
+}
+
+extensions {
+  py {
+    Py
+    abc
+    attr
+    cls
+    conftest
+    dataclass
+    dataclasses
+    fmt
+    functools
+    init
+    isinstance
+    len
+    metaclass
+    repr
+    str
+    urllib
+    urlopen
+  }
+}
