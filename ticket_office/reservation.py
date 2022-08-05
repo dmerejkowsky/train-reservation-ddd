@@ -78,9 +78,9 @@ class TrainId(ValueObject):
 
 class Train:
     """
-    For the purpose of resevration, a train is a fixed collection of seats.
+    For the purpose of reservation, a train is a fixed collection of seats.
     Invariants:
-        * no two seats have the sam id
+        * no two seats have the same id
         * self._caches contains the list of all the coaches
     """
 

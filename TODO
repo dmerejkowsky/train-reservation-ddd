@@ -14,7 +14,6 @@
 
 * Dockerize the two services so you don't need Python for the kata
 
-* Actually the SeatNumber should be a string of two digits "01".."99". Todady they go from
-  "0" to "9"
+* Actually the SeatNumber should be a string of two digits "01".."99". For the moment they go from "0" to "9"
 
 

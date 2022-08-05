@@ -6,10 +6,10 @@ from typing_extensions import Protocol
 # Note the following two classes are mostly here to please mypy
 #
 # The complexity lies because we want value objects to be comparable, hashable
-# (to put them in dicts) and sortable, so we need : a mypy Protocal (Comparable)
+# (to put them in dicts) and sortable, so we need : a mypy Protocol (Comparable)
 # and a generic type var: ValueObject
 #
-# But hey!, it warks
+# But hey!, it works
 C = TypeVar("C")
 
 
