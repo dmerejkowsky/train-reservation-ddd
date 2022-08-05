@@ -24,7 +24,8 @@ class SeatId:
 
     @classmethod
     def parse(cls, value: str) -> "SeatId":
-        assert len(value) == 2
+        if len(value) != 2:
+            raise ValueError(f"{value} should have length 2")
         number = SeatNumber(int(value[0]))
         coach_id = CoachId(value[1])
         return cls(number, coach_id)
@@ -81,7 +82,7 @@ class Train:
     For the purpose of reservation, a train is a fixed collection of seats.
     Invariants:
         * no two seats have the same id
-        * self._caches contains the list of all the coaches
+        * self._caches contains the list of all the coach ids
     """
 
     def __init__(self, *, id: TrainId, seats: list[Seat]) -> None:
@@ -91,8 +92,7 @@ class Train:
         for seat in seats:
             coach_id = seat.coach_id
             self._seats[seat.id] = seat
-            if coach_id not in self._coaches:
-                self._coaches.add(coach_id)
+            self._coaches.add(coach_id)
 
     def booking_reference(self, seat_id: SeatId) -> BookingReference | None:
         seat = self._seats.get(seat_id)
@@ -100,14 +100,20 @@ class Train:
             return None
         return seat.booking_reference
 
+    def _get_seat(self, id: SeatId) -> Seat:
+        res = self._seats.get(id)
+        if not res:
+            raise SeatNotFound(id, train_id=self.id)
+        return res
+
     def is_free(self, seat_id: SeatId) -> bool:
-        assert seat_id in self._seats
-        return self._seats[seat_id].is_free
+        seat = self._get_seat(seat_id)
+        return seat.is_free
 
     def book(self, seats: list[SeatId], booking_reference: BookingReference) -> None:
         for seat_id in seats:
-            assert seat_id in self._seats
-            self._seats[seat_id].book(booking_reference)
+            seat = self._get_seat(seat_id)
+            seat.book(booking_reference)
 
     def seats(self) -> list[Seat]:
         return list(self._seats.values())
@@ -150,3 +156,12 @@ class Reservation:
 
     def __str__(self) -> str:
         return f"Reservation(reference={self.booking_reference}, train={self.train}, seats={[str(i) for i in self.seats]})"
+
+
+class SeatNotFound(Exception):
+    def __init__(self, id: SeatId, train_id: TrainId):
+        self.id = id
+        self.train_id = train_id
+
+    def __str__(self) -> str:
+        return "No seat with id {self.id} in {self.train_id}"

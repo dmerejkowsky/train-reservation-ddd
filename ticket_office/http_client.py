@@ -58,7 +58,6 @@ class HttpClient(Client):
 
 
 def parse_train_data(train_id: TrainId, train_data: Any) -> Train:
-    assert "seats" in train_data
     seat_dicts = train_data["seats"].values()
     seats: list[Seat] = []
     for seat_dict in seat_dicts:
