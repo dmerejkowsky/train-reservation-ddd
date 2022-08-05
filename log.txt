@@ -6,7 +6,7 @@
 * Start rewriting TicketOffice to use a client
 * Got bug because my ValueObject did not implement __eq__, __hash__ and __lt__. That
   was unpleasant
-* After 4 hours of work, I finally have a 'Train' class - better late than never I guess :P
+* After 4 hours of work, I finally have a 'Train' class in a `reservation` module - better late than never I guess :P
 
 * After 5 hours - I finally got the red test I wanted:
 
