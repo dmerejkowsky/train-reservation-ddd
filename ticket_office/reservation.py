@@ -5,11 +5,15 @@ from value_object import ValueObject
 
 
 class BookingReference(ValueObject):
-    pass
+    def validate(self, value: str) -> None:
+        if not value:
+            raise ValueError("BookingReference cannot be empty")
 
 
 class SeatNumber(ValueObject):
-    pass
+    def validate(self, value: int) -> None:
+        if value <= 0 or value > 100:
+            raise ValueError("Seat number must be between 1 and 99")
 
 
 class CoachId(ValueObject):
@@ -24,10 +28,10 @@ class SeatId:
 
     @classmethod
     def parse(cls, value: str) -> "SeatId":
-        if len(value) != 2:
+        if len(value) != 3:
             raise ValueError(f"{value} should have length 2")
-        number = SeatNumber(int(value[0]))
-        coach_id = CoachId(value[1])
+        number = SeatNumber(int(value[0:2]))
+        coach_id = CoachId(value[2])
         return cls(number, coach_id)
 
     def __lt__(self, other: "SeatId") -> bool:
@@ -143,6 +147,10 @@ class Train:
     def occupancy_after_booking(self, seat_count: int) -> float:
         occupied_seats = [s for s in self._seats.values() if not s.is_free]
         return (len(occupied_seats) + seat_count) / len(self._seats)
+
+    def occupancy(self) -> float:
+        occupied_seats = [s for s in self._seats.values() if not s.is_free]
+        return len(occupied_seats) / len(self._seats)
 
     def __repr__(self) -> str:
         return f"{self.seats()}"

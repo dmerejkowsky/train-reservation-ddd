@@ -36,7 +36,11 @@ T = TypeVar("T", bound=Comparable)
 @total_ordering
 class ValueObject(Generic[T]):
     def __init__(self, value: T):
+        self.validate(value)
         self._value = value
+
+    def validate(self, value: T) -> None:
+        pass
 
     def __eq__(self, o: Any) -> bool:
         if not isinstance(o, self.__class__):

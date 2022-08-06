@@ -46,7 +46,7 @@ def test_reserve_four_additional_seats() -> None:
     When we book 4 seats
     Then it makes a valid reservation
     """
-    context = Context(booked_seats=["1A", "2A"])
+    context = Context(booked_seats=["01A", "02A"])
 
     reservation = context.reserve(4)
 
@@ -67,7 +67,7 @@ def test_chose_correct_coach_when_the_first_one_is_almost_full() -> None:
 
     """
     context = Context(
-        booked_seats=["0A", "1A", "2A", "3A", "4A", "5A", "6A"],
+        booked_seats=["01A", "02A", "03A", "04A", "05A", "06A", "07A", "08A"],
     )
 
     reservation = context.reserve(4)
@@ -90,9 +90,13 @@ def test_chose_next_coach_when_the_first_one_is_at_60_percent() -> None:
         We book 3 seats in coach B because booking one seat in coach A
         would make the occupancy for A greater than 70%
     """
-    context = Context(
-        booked_seats=["0A", "1A", "2A", "3A", "4A"],
-    )
+    # fmt: off
+    booked_seats = [
+        "01A", "02A", "03A", "04A", "05A",
+        "01B", "02B", "03B", "04B",
+    ]
+    # fmt: on
+    context = Context(booked_seats=booked_seats)
 
     reservation = context.reserve(3)
 
@@ -121,11 +125,11 @@ def test_raise_if_going_over_70_percent_for_the_whole_train() -> None:
     """
     # fmt: off
     booked_seats = [
-        "0A", "1A", "2A", "3A", "4A", "5A", "6A", "7A",
-        "0B", "1B", "2B", "3B", "4B", "5B", "6B",
-        "0C", "1C", "2C", "3C", "4C", "5C", "6C",
-        "0D", "1D", "2D", "3D", "4D", "5D", "6D",
-        "0E", "1E", "2E", "3E", "4E", "5E", "6E",
+        "01A", "02A", "03A", "04A", "05A", "06A", "07A", "08A",
+        "01B", "02B", "03B", "04B", "05B", "06B", "07B",
+        "01C", "02C", "03C", "04C", "05C", "06C", "07B",
+        "01D", "02D", "03D", "04D", "05D", "06D", "07B",
+        "01E", "02E", "03E", "04E", "05E", "06E", "07B",
     ]
     # fmt: on
     context = Context(booked_seats=booked_seats)
@@ -144,11 +148,11 @@ def test_fail_when_no_coach_can_be_filled() -> None:
     """
     # fmt: off
     booked_seats = [
-        "0A", "1A", "2A", "3A", "4A", "5A", "6A",
-        "0B", "1B", "2B", "3B", "4B", "5B", "6B",
-        "0C", "1C", "2C", "3C", "4C", "5C", "6C",
-        "0D", "1D", "2D", "3D", "4D", "5D", "6D",
-        "0E", "1E", "2E", "3E", "4E", "5E", "6E",
+        "01A", "02A", "03A", "04A", "05A", "06A", "07A",
+        "01B", "02B", "03B", "04B", "05B", "06B", "07B",
+        "01C", "02C", "03C", "04C", "05C", "06C", "07C",
+        "01D", "02D", "03D", "04D", "05D", "06D", "07D",
+        "01E", "02E", "03E", "04E", "05E", "06E", "07E",
     ]
     # fmt: on
     context = Context(booked_seats=booked_seats)
@@ -172,9 +176,9 @@ def check_reservation(
     coaches = {s.coach_id for s in seat_ids}
     assert len(coaches) == 1, f"All seats should have the same coach {seat_ids}"
 
-    # Check all coaches are below 0.7
+    # Check total occupancy is below 0.7
     for coach in train.coaches():
-        occupancy = train.occupancy_for_coach(coach)
+        occupancy = train.occupancy()
         assert occupancy <= 0.7, (
             f"Not enough room in coach {coach} : {train.seats_in_coach(coach)}.\n"
             f"Reservation was:\n{reservation}"

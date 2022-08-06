@@ -16,12 +16,12 @@ def test_fake_client_comes_with_an_empty_train(
 def test_throws_when_trying_to_book_same_seat_with_different_booking_references(
     train_id: TrainId, train: Train, fake_client: FakeClient
 ) -> None:
-    seat_ids = [SeatId.parse("1A"), SeatId.parse("2A")]
+    seat_ids = [SeatId.parse("01A"), SeatId.parse("02A")]
     train.book(seat_ids, BookingReference("1234"))
 
     fake_client.set_train(train)
 
-    conflicting_seats = [SeatId.parse("2A"), SeatId.parse("3A")]
+    conflicting_seats = [SeatId.parse("02A"), SeatId.parse("03A")]
     conflicting_reservation = Reservation(
         train=train_id,
         seats=conflicting_seats,

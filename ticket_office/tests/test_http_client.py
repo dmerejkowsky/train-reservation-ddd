@@ -13,8 +13,8 @@ def test_can_get_empty_train(train_id: TrainId, http_client: HttpClient) -> None
 
 def test_can_book_some_seats(train_id: TrainId, http_client: HttpClient) -> None:
     seat_ids = [
-        SeatId.parse("1A"),
-        SeatId.parse("2A"),
+        SeatId.parse("01A"),
+        SeatId.parse("02A"),
     ]
     booking_reference = BookingReference("123456")
     reservation = Reservation(
