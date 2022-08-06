@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import string
 from functools import total_ordering
 
 from value_object import ValueObject
@@ -17,7 +18,9 @@ class SeatNumber(ValueObject):
 
 
 class CoachId(ValueObject):
-    pass
+    def validate(self, value: str) -> None:
+        if value not in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+            raise ValueError("Coach ID should be one uppercase letter")
 
 
 @total_ordering
