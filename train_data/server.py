@@ -17,7 +17,7 @@ Note I've left out all the extraneous details about where the train is going to 
 
     http://localhost:8081/reserve
 
-and attach form data for which seats to reserve. There should be three fields: 
+and attach form data for which seats to reserve. There should be three fields:
 
     "train_id", "seats", "booking_reference"
 
@@ -31,23 +31,24 @@ The service has one additional method, that will remove all reservations on a pa
 
     http://localhost:8081/reset/express_2000
 """
+import cherrypy
 import json
 
-class TrainDataService(object):
-    
+
+class TrainDataService:
     def __init__(self, json_data):
         self.trains = json.loads(json_data)
-    
+
     def data_for_train(self, train_id):
         return json.dumps(self.trains.get(train_id))
-    
+
     def reserve(self, train_id, seats, booking_reference):
         train = self.trains.get(train_id)
         seats = json.loads(seats)
         for seat in seats:
             if not seat in train["seats"]:
                 return "seat not found {0}".format(seat)
-            existing_reservation =  train["seats"][seat]["booking_reference"]
+            existing_reservation = train["seats"][seat]["booking_reference"]
             if existing_reservation and existing_reservation != booking_reference:
                 return "already booked with reference: {0}".format(existing_reservation)
         for seat in seats:
@@ -59,4 +60,17 @@ class TrainDataService(object):
         for seat_id, seat in train["seats"].items():
             seat["booking_reference"] = ""
         return self.data_for_train(train_id)
-    
+
+
+def main():
+    with open("trains.json", "r") as f:
+        trains_data = f.read()
+    TrainDataService.data_for_train.exposed = True
+    TrainDataService.reserve.exposed = True
+    TrainDataService.reset.exposed = True
+    cherrypy.config.update({"server.socket_port": 8081})
+    cherrypy.quickstart(TrainDataService(trains_data))
+
+
+if __name__ == "__main__":
+    main()
