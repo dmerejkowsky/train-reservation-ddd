@@ -7,12 +7,23 @@ from ticket_office.domain.reservation import (
     SeatId,
     SeatNumber,
     Train,
+    TrainId,
 )
 
 
 def test_cannot_create_invalid_booking_references() -> None:
     with pytest.raises(ValueError):
         BookingReference("")
+
+
+def test_cannot_create_empty_train_id() -> None:
+    with pytest.raises(ValueError):
+        TrainId("")
+
+
+def test_cannot_create_blank_train_id() -> None:
+    with pytest.raises(ValueError):
+        TrainId("  \t")
 
 
 def test_can_create_empty_seats() -> None:

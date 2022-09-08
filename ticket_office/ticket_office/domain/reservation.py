@@ -4,19 +4,19 @@ from functools import total_ordering
 from ticket_office.domain.value_object import ValueObject
 
 
-class BookingReference(ValueObject):
+class BookingReference(ValueObject[str]):
     def validate(self, value: str) -> None:
         if not value:
             raise ValueError("BookingReference cannot be empty")
 
 
-class SeatNumber(ValueObject):
+class SeatNumber(ValueObject[int]):
     def validate(self, value: int) -> None:
         if value <= 0 or value > 100:
             raise ValueError("Seat number must be between 1 and 99")
 
 
-class CoachId(ValueObject):
+class CoachId(ValueObject[str]):
     def validate(self, value: str) -> None:
         if value not in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
             raise ValueError("Coach ID should be one uppercase letter")
@@ -79,8 +79,10 @@ class Seat:
         return self.booking_reference is None
 
 
-class TrainId(ValueObject):
-    pass
+class TrainId(ValueObject[str]):
+    def validate(self, value: str) -> None:
+        if not value or value.isspace():
+            raise ValueError("train id should not be blank")
 
 
 class Train:
