@@ -1,8 +1,7 @@
 from dataclasses import dataclass
-import string
 from functools import total_ordering
 
-from value_object import ValueObject
+from ticket_office.domain.value_object import ValueObject
 
 
 class BookingReference(ValueObject):

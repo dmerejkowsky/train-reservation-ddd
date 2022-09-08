@@ -1,7 +1,13 @@
 import pytest
 
-from reservation import BookingReference, Reservation, SeatId, Train, TrainId
-from ticket_office import NotEnoughFreeSeats, TicketOffice
+from ticket_office.domain.reservation import (
+    BookingReference,
+    Reservation,
+    SeatId,
+    Train,
+    TrainId,
+)
+from ticket_office.domain.ticket_office import NotEnoughFreeSeats, TicketOffice
 
 from .conftest import FakeClient, make_empty_train
 

@@ -1,7 +1,14 @@
 import pytest
 
-from http_client import HttpClient
-from reservation import CoachId, Seat, SeatId, SeatNumber, Train, TrainId
+from ticket_office.domain.reservation import (
+    CoachId,
+    Seat,
+    SeatId,
+    SeatNumber,
+    Train,
+    TrainId,
+)
+from ticket_office.infra.http_client import HttpClient
 
 from .helpers import FakeClient
 

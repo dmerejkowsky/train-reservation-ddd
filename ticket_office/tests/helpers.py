@@ -1,4 +1,10 @@
-from client import BookingReference, Client, Reservation, Train, TrainId
+from ticket_office.domain.client import (
+    BookingReference,
+    Client,
+    Reservation,
+    Train,
+    TrainId,
+)
 
 
 class FakeClient(Client):

@@ -1,6 +1,11 @@
 import abc
 
-from reservation import BookingReference, Reservation, Train, TrainId
+from ticket_office.domain.reservation import (
+    BookingReference,
+    Reservation,
+    Train,
+    TrainId,
+)
 
 
 class Client(metaclass=abc.ABCMeta):

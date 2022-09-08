@@ -1,6 +1,12 @@
 import pytest
 
-from reservation import BookingReference, Reservation, SeatId, Train, TrainId
+from ticket_office.domain.reservation import (
+    BookingReference,
+    Reservation,
+    SeatId,
+    Train,
+    TrainId,
+)
 
 from .helpers import FakeClient
 

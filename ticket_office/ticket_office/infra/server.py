@@ -1,7 +1,10 @@
 import json
 
-from client import Reservation, TrainId
-from ticket_office import TicketOffice
+import cherrypy
+
+from ticket_office.domain.client import Reservation, TrainId
+from ticket_office.domain.ticket_office import TicketOffice
+from ticket_office.infra.http_client import HttpClient
 
 
 class Server:
@@ -28,14 +31,14 @@ def serialize_reservation(reservation: Reservation) -> str:
     return json.dumps(as_dict)
 
 
-if __name__ == "__main__":
-    """Deploy this class as a web service using CherryPy"""
-    import cherrypy
-
-    from http_client import HttpClient
-
-    Server.reserve.exposed = True  # type: ignore[attr-defined]
+def main() -> None:
+    Server.reserve.exposed = True # type: ignore[attr-defined]
     cherrypy.config.update({"server.socket_port": 8083})
     client = HttpClient()
     ticket_office = TicketOffice(client=client)
-    cherrypy.quickstart(Server(ticket_office=ticket_office))
+    server = Server(ticket_office=ticket_office)
+    cherrypy.quickstart(server)
+
+if __name__ == "__main__":
+    main()
+

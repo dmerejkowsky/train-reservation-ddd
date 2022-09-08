@@ -1,5 +1,10 @@
-from http_client import HttpClient
-from reservation import BookingReference, Reservation, SeatId, TrainId
+from ticket_office.domain.reservation import (
+    BookingReference,
+    Reservation,
+    SeatId,
+    TrainId,
+)
+from ticket_office.infra.http_client import HttpClient
 
 
 def test_can_get_empty_train(train_id: TrainId, http_client: HttpClient) -> None:

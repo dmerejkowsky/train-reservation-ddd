@@ -1,9 +1,17 @@
 import pytest
-from reservation import BookingReference, CoachId, Seat, SeatId, SeatNumber, Train
+
+from ticket_office.domain.reservation import (
+    BookingReference,
+    CoachId,
+    Seat,
+    SeatId,
+    SeatNumber,
+    Train,
+)
 
 
 def test_cannot_create_invalid_booking_references() -> None:
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(ValueError):
         BookingReference("")
 
 

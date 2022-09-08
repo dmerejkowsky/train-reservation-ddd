@@ -3,8 +3,8 @@ from typing import Any
 
 import httpx
 
-from client import Client
-from reservation import (
+from ticket_office.domain.client import Client
+from ticket_office.domain.reservation import (
     BookingReference,
     CoachId,
     Reservation,
