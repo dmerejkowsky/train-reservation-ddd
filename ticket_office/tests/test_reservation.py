@@ -1,6 +1,7 @@
 import pytest
 
 from ticket_office.domain.reservation import (
+    AlreadyBooked,
     BookingReference,
     CoachId,
     Seat,
@@ -47,6 +48,42 @@ def test_parse_seat_ids() -> None:
     x = SeatId.parse("01A")
     assert x.coach_id == CoachId("A")
     assert x.number == SeatNumber(1)
+
+
+def test_seat_can_go_from_free_to_booked() -> None:
+    number = SeatNumber(1)
+    coach_id = CoachId("A")
+    seat = Seat(number=number, coach_id=coach_id, booking_reference=None)
+
+    booking_reference = BookingReference("123")
+    seat.book(booking_reference)
+
+    assert seat.booking_reference == booking_reference
+
+
+def test_seat_can_be_booked_twice_with_the_same_reference() -> None:
+    number = SeatNumber(1)
+    coach_id = CoachId("A")
+    booking_reference = BookingReference("123")
+    seat = Seat(number=number, coach_id=coach_id, booking_reference=booking_reference)
+
+    seat.book(booking_reference)
+
+    assert seat.booking_reference == booking_reference
+
+
+def test_seat_cannot_be_booked_with_conflicting_references() -> None:
+    number = SeatNumber(1)
+    coach_id = CoachId("A")
+    first_booking_reference = BookingReference("123")
+    second_booking_reference = BookingReference("456")
+    seat = Seat(
+        number=number, coach_id=coach_id, booking_reference=first_booking_reference
+    )
+
+    with pytest.raises(AlreadyBooked) as e:
+        seat.book(second_booking_reference)
+    print(e.value)
 
 
 def test_can_book_some_seats(train: Train) -> None:

@@ -72,7 +72,11 @@ class Seat:
         return cls.free_seat_with_id(id)
 
     def book(self, booking_reference: BookingReference) -> None:
-        self.booking_reference = booking_reference
+        if self.booking_reference is None:
+            self.booking_reference = booking_reference
+        if self.booking_reference == booking_reference:
+            return
+        raise AlreadyBooked(self.id, self.booking_reference, booking_reference)
 
     @property
     def is_free(self) -> bool:
@@ -177,3 +181,20 @@ class SeatNotFound(Exception):
 
     def __str__(self) -> str:
         return "No seat with id {self.id} in {self.train_id}"
+
+
+class AlreadyBooked(Exception):
+    def __init__(
+        self,
+        id: SeatId,
+        current_booking_reference: BookingReference,
+        invalid_booking_reference: BookingReference,
+    ):
+        self.id = id
+        self.current_booking_reference = current_booking_reference
+        self.invalid_booking_reference = invalid_booking_reference
+
+    def __str__(self) -> str:
+        res = f"Trying to book seat '{self.id}' with '{self.invalid_booking_reference}'"
+        res += f" but it's already booked with '{self.current_booking_reference}'"
+        return res

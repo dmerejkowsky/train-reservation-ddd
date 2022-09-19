@@ -85,7 +85,7 @@ def test_chose_correct_coach_when_the_first_one_is_almost_full() -> None:
     )
 
 
-def test_chose_next_coach_when_the_first_one_is_at_60_percent() -> None:
+def test_chose_next_coach_when_the_first_one_is_at_50_percent() -> None:
     """
     Given:
         Coach A is at 50%
@@ -93,7 +93,7 @@ def test_chose_next_coach_when_the_first_one_is_at_60_percent() -> None:
     When:
         Booking 3 seats
     Then:
-        We book 3 seats in coach B because booking one seat in coach A
+        We book 3 seats in coach B because booking 3 seats in coach A
         would make the occupancy for A greater than 70%
     """
     # fmt: off
